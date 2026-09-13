@@ -1,0 +1,1 @@
+{"mcpServers":{"instagram":{"command":"bash","args":["-lc","cd /home/nicole/MyGithub/instagram-mcp && set -a && source .env && set +a && .venv/bin/python -m src.instagram_mcp_server"]}}}
