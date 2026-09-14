@@ -823,11 +823,14 @@ class InstagramClient:
         if media_type not in ("top", "recent"):
             raise InstagramAPIError("media_type must be 'top' or 'recent'")
 
-        fields = "id,media_type,media_url,permalink,caption,timestamp,like_count,comments_count"
+        # A edge de hashtag media e sensivel a volume: pedir muitos campos (media_url,
+        # caption) ou limit alto dispara "reduce the amount of data". Mantemos o
+        # conjunto minimo e um limit conservador.
+        fields = "id,media_type,permalink,timestamp,like_count,comments_count"
         params = {
             "user_id": account_id,
             "fields": fields,
-            "limit": min(limit, 50),
+            "limit": min(limit, 25),
         }
 
         try:
@@ -912,20 +915,19 @@ class InstagramClient:
         if not account_id:
             raise InstagramAPIError("Instagram business account ID not configured")
 
+        # Graph API exige a sintaxe business_discovery.username(TARGET){fields}.
+        # Sem o username entre parenteses a API responde (#100) username is required.
         discovery_fields = (
-            "username,name,biography,website,"
+            "id,username,name,biography,website,"
             "followers_count,follows_count,media_count,profile_picture_url"
         )
+        target = target_username.lstrip("@")
         params = {
-            "fields": f"business_discovery.fields({discovery_fields}){{username,name,biography,website,followers_count,follows_count,media_count,profile_picture_url}}",
+            "fields": f"business_discovery.username({target}){{{discovery_fields}}}",
         }
 
         try:
-            # Use the simpler approach: fields=business_discovery.fields(...)
-            simple_params = {
-                "fields": f"business_discovery.fields({discovery_fields})",
-            }
-            data = await self._make_request("GET", account_id, params=simple_params)
+            data = await self._make_request("GET", account_id, params=params)
             bd = data.get("business_discovery", {})
             if not bd:
                 raise InstagramAPIError(
