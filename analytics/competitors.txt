@@ -1,0 +1,9 @@
+# Concorrentes / referencias para benchmarking (rotina R5).
+# Um usuario por linha, com ou sem @. Linhas com # sao ignoradas.
+# Precisam ser contas Instagram Business/Creator PUBLICAS.
+# Preencha com clinicas/psicologos/nutricionistas do seu nicho e regiao.
+#
+# exemplos (troque pelos reais):
+# clinicaconcorrente1
+# psicologa_referencia
+# nutricionista_local

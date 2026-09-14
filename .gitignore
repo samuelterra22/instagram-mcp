@@ -348,3 +348,7 @@ logs/
 .env.*
 .serena/
 logs/
+
+# dados/relatorios de analytics (privado)
+analytics/data/
+analytics/reports/
